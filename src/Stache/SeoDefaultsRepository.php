@@ -2,8 +2,8 @@
 
 namespace Aerni\AdvancedSeo\Stache;
 
+use Aerni\AdvancedSeo\Contracts\SeoDefaultSet;
 use Aerni\AdvancedSeo\Contracts\SeoDefaultsRepository as Contract;
-use Aerni\AdvancedSeo\Data\SeoDefaultSet;
 use Illuminate\Support\Collection;
 use Statamic\Data\DataCollection;
 use Statamic\Stache\Stache;
@@ -62,5 +62,12 @@ class SeoDefaultsRepository implements Contract
         $this->store->store($set->type())->delete($set);
 
         return true;
+    }
+
+    public static function bindings(): array
+    {
+        return [
+            \Aerni\AdvancedSeo\Contracts\SeoDefaultSet::class => \Aerni\AdvancedSeo\Data\SeoDefaultSet::class,
+        ];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Aerni\AdvancedSeo\Policies;
 
-use Aerni\AdvancedSeo\Data\SeoDefaultSet;
+use Aerni\AdvancedSeo\Contracts\SeoDefaultSet;
 use Aerni\AdvancedSeo\Models\Defaults;
 use Statamic\Facades\User;
 use Statamic\Policies\Concerns\HasMultisitePolicy;

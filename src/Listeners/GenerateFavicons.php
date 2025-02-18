@@ -2,7 +2,7 @@
 
 namespace Aerni\AdvancedSeo\Listeners;
 
-use Aerni\AdvancedSeo\Data\SeoDefaultSet;
+use Aerni\AdvancedSeo\Contracts\SeoDefaultSet;
 use Aerni\AdvancedSeo\Events\SeoDefaultSetSaved;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Statamic\Facades\File;

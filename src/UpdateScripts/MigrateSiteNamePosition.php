@@ -1,6 +1,6 @@
 <?php
 
-namespace Aerni\AdvancedSeo\Updates;
+namespace Aerni\AdvancedSeo\UpdateScripts;
 
 use Aerni\AdvancedSeo\Facades\Seo;
 use Aerni\AdvancedSeo\Models\Defaults;

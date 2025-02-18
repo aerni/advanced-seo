@@ -1,0 +1,7 @@
+{
+    "packages": [
+        {
+            "name": "statamic/eloquent-driver"
+        }
+    ]
+}

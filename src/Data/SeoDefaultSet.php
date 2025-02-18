@@ -3,9 +3,9 @@
 namespace Aerni\AdvancedSeo\Data;
 
 use Aerni\AdvancedSeo\Concerns\HasDefaultsData;
+use Aerni\AdvancedSeo\Contracts\SeoDefaultSet as Contract;
 use Aerni\AdvancedSeo\Models\Defaults;
 use Illuminate\Support\Collection;
-use Statamic\Contracts\Globals\GlobalSet as Contract;
 use Statamic\Data\ExistsAsFile;
 use Statamic\Facades\Collection as CollectionFacade;
 use Statamic\Facades\Site;

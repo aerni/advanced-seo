@@ -1,6 +1,6 @@
 <?php
 
-namespace Aerni\AdvancedSeo\Updates;
+namespace Aerni\AdvancedSeo\UpdateScripts;
 
 use Illuminate\Support\Facades\File;
 use Statamic\UpdateScripts\UpdateScript;

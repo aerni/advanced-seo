@@ -23,13 +23,14 @@
         "spatie/image": "^3.4",
         "spatie/laravel-ray": "^1.32",
         "spatie/schema-org": "^3.14",
-        "statamic/cms": "^5.14",
+        "statamic/cms": "^5.46",
         "whitecube/lingua": "^1.1"
     },
     "require-dev": {
-        "nunomaduro/collision": "^7.0 || ^8.0",
+        "nunomaduro/collision": "^8.0",
         "orchestra/testbench": "^8.0 || ^9.0",
-        "pestphp/pest": "^2.36"
+        "pestphp/pest": "^3.0",
+        "statamic/eloquent-driver": "^4.19"
     },
     "autoload": {
         "psr-4": {

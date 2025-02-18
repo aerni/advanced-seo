@@ -2,7 +2,7 @@
 
 namespace Aerni\AdvancedSeo\Stache;
 
-use Aerni\AdvancedSeo\Data\SeoDefaultSet;
+use Aerni\AdvancedSeo\Contracts\SeoDefaultSet;
 use Aerni\AdvancedSeo\Data\SeoVariables;
 use Aerni\AdvancedSeo\Facades\Seo;
 use Illuminate\Support\Str;
@@ -103,6 +103,8 @@ class SeoDefaultsStore extends ChildStore
     {
         parent::save($set);
 
+        // TODO: This could likely be simplified by using the sites() method on the $set.
+        // See makeModelFromContract() on Eloquent SeoDefaultSet.
         if (Site::multiEnabled()) {
             Site::all()->each(function ($site) use ($set) {
                 $site = $site->handle();

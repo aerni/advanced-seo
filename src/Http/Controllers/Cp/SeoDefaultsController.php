@@ -2,7 +2,7 @@
 
 namespace Aerni\AdvancedSeo\Http\Controllers\Cp;
 
-use Aerni\AdvancedSeo\Data\SeoDefaultSet;
+use Aerni\AdvancedSeo\Contracts\SeoDefaultSet;
 use Aerni\AdvancedSeo\Data\SeoVariables;
 use Aerni\AdvancedSeo\Events\SeoDefaultSetSaved;
 use Aerni\AdvancedSeo\Facades\Seo;
@@ -139,6 +139,7 @@ class SeoDefaultsController extends CpController
 
         $localization = $localization->save();
 
+        // TODO: We should probably dispatch this event in the save method of the SeoDefaultSet class or the repository.
         SeoDefaultSetSaved::dispatch($localization->seoSet());
     }
 
