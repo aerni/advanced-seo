@@ -9,12 +9,9 @@ use Aerni\AdvancedSeo\Support\Helpers;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Statamic\Events;
 use Statamic\Events\Event;
 use Statamic\Facades\Fieldset;
-use Statamic\Facades\Site;
-use Statamic\Statamic;
 
 class OnPageSeoBlueprintSubscriber
 {
@@ -57,6 +54,36 @@ class OnPageSeoBlueprintSubscriber
         $usesDefaultSeoBlueprint
             ? $this->handleDefaultBlueprint($event, $seoFields)
             : $this->handleCustomizedBlueprint($event, $seoFields);
+    }
+
+    protected function shouldExtendBlueprint(Event $event): bool
+    {
+        // Don't add the fields if the collection/taxonomy is disabled.
+        if (Helpers::isDisabled($this->data->type, $this->data->handle)) {
+            return false;
+        }
+
+        // Ensure the collection/taxonomy defaults view doesn't break.
+        if (Helpers::isAddonCpRoute()) {
+            return false;
+        }
+
+        // Ensure the fields won't be saved to file when editing a blueprint.
+        if (Helpers::isBlueprintCpRoute()) {
+            return false;
+        }
+
+        /**
+         * TODO: This can be removed when the Statamic PR is merged that ensures a unique blueprint instance.
+         * The BlueprintFound event is called for every localization.
+         * But we only want to extend the blueprint for the current localization.
+         * Otherwise we will have issue evaluating conditional fields, e.g. the sitemap fields.
+         */
+        if (Helpers::isEntryEditRoute()) {
+            return $event->entry?->id() === request()->route()->originalParameter('entry');
+        }
+
+        return true;
     }
 
     /**
@@ -155,56 +182,5 @@ class OnPageSeoBlueprintSubscriber
         $fieldsToHide->map(fn ($field) => $field->config()) // We need the config to ensure the field below.
             ->map(fn ($config) => array_merge($config, ['if' => ['hide_me_and_do_not_save_data' => true]])) // Add condition to hide the field and save no data.
             ->each(fn ($config, $handle) => $event->blueprint->ensureField($handle, $config));
-    }
-
-    protected function shouldExtendBlueprint(Event $event): bool
-    {
-        // Don't add fields if the collection/taxonomy is excluded in the config.
-        if ($this->isDisabledType()) {
-            return false;
-        }
-
-        // Don't add fields in the blueprint builder.
-        if (Helpers::isBlueprintCpRoute()) {
-            return false;
-        }
-
-        // Don't add fields on any addon views in the CP.
-        if (Helpers::isAddonCpRoute()) {
-            return false;
-        }
-
-        // Don't add fields to any other CP route other than the entry/term view and when performing an action on the listing view (necesarry for the social images generator action to work).
-        if (Statamic::isCpRoute() && ! $this->isModelCpRoute($event) && ! $this->isActionCpRoute()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function isDisabledType(): bool
-    {
-        return in_array($this->data->handle, config("advanced-seo.disabled.{$this->data->type}", []));
-    }
-
-    protected function isModelCpRoute(Event $event): bool
-    {
-        // Has a value if editing or localizing an existing entry/term.
-        $id = $this->data->type === 'collections' ? $event->entry?->id() : $event->term?->slug();
-
-        // The locale a new entry is being created in.
-        $createLocale = Arr::get(Site::all()->map->handle(), basename(request()->path()));
-
-        /**
-         * The BlueprintFound event is called for every localization.
-         * But we only want to extend the blueprint for the current localization.
-         * Otherwise we will have issue evaluating conditional fields, e.g. the sitemap fields.
-         */
-        return Statamic::isCpRoute() && Str::containsAll(request()->path(), [$this->data->type, $id ?? $createLocale]);
-    }
-
-    protected function isActionCpRoute(): bool
-    {
-        return Statamic::isCpRoute() && Str::containsAll(request()->path(), [$this->data->type, $this->data->handle, 'actions']);
     }
 }
